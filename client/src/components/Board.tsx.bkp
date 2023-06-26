@@ -1,0 +1,117 @@
+import { Button, Col, Row, Spinner } from "react-bootstrap"
+import MarkdownEditor from "rich-markdown-editor"
+import SideBar from "./SideBar"
+import MyModal from "./MyModal"
+import { Note } from "../services/dbservice"
+import { useState } from "react"
+
+interface Props {
+  note: Note | null
+  showModal: boolean
+  modalTitle: string
+  modalLabel: string
+  modalType: "note" | "category"
+  onNoteSelected: (note: Note) => void
+  handleCloseModal: () => void
+  handleSumbitModal: (obj: { type: "note" | "category"; value: string }) => void
+}
+
+const Board = ({
+  note,
+  showModal,
+  modalLabel,
+  modalTitle,
+  modalType,
+  handleCloseModal,
+  handleSumbitModal,
+  onNoteSelected,
+}: Props) => {
+  const [content, setContent] = useState("")
+  const [editing, setEditing] = useState(false)
+
+  const handleDeleteDoc = (id: string) => {
+    if (window.confirm("Delete?")) {
+      // db.delete(id)
+      // init()
+    }
+  }
+
+  const handleEditDoc = () => {
+    setEditing(true)
+  }
+
+  const handleDocChange = (e: any) => {
+    setContent(e())
+  }
+
+  const handleSaveDoc = async () => {}
+
+  return (
+    <>
+      <MyModal
+        categories={[]}
+        showModal={showModal}
+        modalLabel={modalLabel}
+        modalTitle={modalTitle}
+        modalType={modalType}
+        handleClose={handleCloseModal}
+        handleSubmit={handleSumbitModal}
+      />
+      <Row>
+        <Col sm={3}>
+          <SideBar onNoteSelected={onNoteSelected} />
+        </Col>
+        <Col sm={9}>
+          {!note && (
+            <Spinner animation='border' role='status'>
+              <span className='visually-hidden'>Loading...</span>
+            </Spinner>
+          )}
+          {note && (
+            <>
+              <div className='actionButtons btn-group'>
+                {!editing && (
+                  <Button size='sm' variant='warning' onClick={handleEditDoc}>
+                    Edit
+                  </Button>
+                )}
+                {editing && (
+                  <Button size='sm' variant='success' onClick={handleSaveDoc}>
+                    Save
+                  </Button>
+                )}
+                {editing && (
+                  <Button
+                    size='sm'
+                    variant='warning'
+                    onClick={() => setEditing(false)}
+                  >
+                    Cancel
+                  </Button>
+                )}
+                {!editing && (
+                  <Button
+                    size='sm'
+                    variant='danger'
+                    onClick={() => handleDeleteDoc("a")}
+                  >
+                    Delete
+                  </Button>
+                )}
+              </div>
+              <MarkdownEditor
+                readOnly={!editing}
+                autoFocus={true}
+                defaultValue=''
+                value={note.content}
+                onChange={() => {}}
+              ></MarkdownEditor>
+            </>
+          )}
+        </Col>
+      </Row>
+    </>
+  )
+}
+
+export default Board
