@@ -12,7 +12,7 @@ model Category {
   title  String
   userId Int
   User   User   @relation(fields: [userId], references: [id])
-  Note   Note[]
+  notes   Note[]
 }
 
 model Note {
@@ -27,5 +27,5 @@ model User {
   id       Int        @id @default(autoincrement())
   email    String     @unique
   name     String?
-  Category Category[]
+  categories Category[]
 }
