@@ -8,6 +8,6 @@ RUN apk update && \
 RUN npm install
 RUN npx prisma init
 
-CMD [ "npx ts-node ./src/index.ts" ]
+CMD [ "npx ts-node .\src\index.ts" ]
 EXPOSE 3000
 
