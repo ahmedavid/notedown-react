@@ -16,7 +16,6 @@ function App() {
     console.log("NOTE ID: ", noteId)
     if (noteId) {
       setIsLoading(true)
-      setSelectedNote(null)
       noteService
         .getNoteById(parseInt(noteId))
         .then((note) => {
