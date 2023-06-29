@@ -46,7 +46,6 @@ class NoteService {
 
     const response = await fetch(`${baseUrl}/note/${noteId}`)
     const data = await response.json()
-    console.log("NOTE DATA: ", data)
     return data
   }
 
