@@ -1,7 +1,0 @@
-FROM arm64v8/node:20-bullseye-slim as build-env
-WORKDIR /app
-COPY . .
-RUN npm install
-EXPOSE 3000
-CMD npm start
-

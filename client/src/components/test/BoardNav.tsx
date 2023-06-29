@@ -3,10 +3,11 @@ import { Category } from "../../services/note.service"
 
 interface Props {
   isLoading: boolean
+  selectedNoteId: string | null
   categories: Category[]
 }
 
-const BoardNav = ({ categories, isLoading }: Props) => {
+const BoardNav = ({ categories, isLoading,selectedNoteId }: Props) => {
   return (
     <div>
       {categories.map((category) => (
@@ -28,7 +29,7 @@ const BoardNav = ({ categories, isLoading }: Props) => {
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
                     <span>{note.title}</span>
-                    {isLoading && (
+                    {(selectedNoteId === note.id+"") && isLoading && (
                       <Spinner
                         as='span'
                         animation='border'

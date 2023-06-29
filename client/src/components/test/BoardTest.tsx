@@ -10,11 +10,13 @@ interface Props {
   onUpdateNote: (noteId: number, categoryId: number, content: string) => void
   onDeleteNote: (noteId: number, categoryId: number) => void
   selectedNote: Note | null
+  selectedNoteId: string | null
 }
 
 const BoardTest = ({
   categories,
   selectedNote,
+  selectedNoteId,
   isLoading,
   onNoteSelected,
   onUpdateNote,
@@ -30,7 +32,7 @@ const BoardTest = ({
     >
       <Row>
         <Col sm={3}>
-          <BoardNav categories={categories} isLoading={isLoading} />
+          <BoardNav categories={categories} isLoading={isLoading} selectedNoteId={selectedNoteId} />
         </Col>
         <Col sm={9}>
           <BoardContent
