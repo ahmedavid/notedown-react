@@ -11,10 +11,12 @@ stages:
   - job: TestJob
     steps:
     - task: Npm@1
+      displayName: Install Dependencies
       inputs:
         command: 'ci'
         workingDir: 'client'
     - task: Npm@1
+      displayName: Run Tests
       inputs:
         command: 'custom'
         workingDir: 'client'
