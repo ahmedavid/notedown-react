@@ -19,6 +19,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: 'CI=true npm test -- --reporters=jest-junit --reporters=default'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/client'
     - task: PublishTestResults@2
       inputs:
         testResultsFormat: 'JUnit'
