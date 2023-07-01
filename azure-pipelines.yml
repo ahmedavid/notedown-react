@@ -4,11 +4,18 @@ trigger:
 pool:
   name: ArmPool
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+stages:
+- stage: Test
+  displayName: Run React Tests
+  jobs:
+  - job: TestJob
+    steps:
+    - task: Npm@1
+      inputs:
+        command: 'install'
+        workingDir: 'client'
+    - task: Npm@1
+      inputs:
+        command: 'custom'
+        workingDir: 'client'
+        customCommand: 'test'
