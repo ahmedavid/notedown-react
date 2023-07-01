@@ -12,10 +12,10 @@ stages:
     steps:
     - task: Npm@1
       inputs:
-        command: 'install'
+        command: 'ci'
         workingDir: 'client'
     - task: Npm@1
       inputs:
         command: 'custom'
         workingDir: 'client'
-        customCommand: 'test'
+        customCommand: 'test -- --watchAll=false'
