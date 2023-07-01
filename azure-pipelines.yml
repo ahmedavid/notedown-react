@@ -6,7 +6,7 @@ pool:
 
 stages:
 - stage: Test
-  displayName: Run React Tests
+  displayName: Test
   jobs:
   - job: TestJob
     steps:
