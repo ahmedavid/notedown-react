@@ -6,18 +6,42 @@ pool:
 
 stages:
 - stage: Test
-  displayName: Run React Tests
+  displayName: Test
   jobs:
   - job: TestJob
     steps:
-    - task: Npm@1
-      displayName: Install Dependencies
+    - task: Bash@3
+      displayName: Clean Install
       inputs:
-        command: 'ci'
-        workingDir: 'client'
-    - task: Npm@1
+        targetType: 'inline'
+        script: 'npm ci'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/client'
+    - task: Bash@3
       displayName: Run Tests
       inputs:
-        command: 'custom'
-        workingDir: 'client'
-        customCommand: 'test -- --watchAll=false'
+        targetType: 'inline'
+        script: 'CI=true npm test'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/client'
+
+- stage: Build
+  displayName: Build
+  jobs:
+  - job: Build
+    steps:
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'dockerhub-ahmedavid'
+        repository: 'ahmedavid/notedown-react'
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
+        buildContext: 'client'
+        tags: |
+          $(Build.BuildId)
+          latest
+    # - task: PublishTestResults@2
+    #   inputs:
+    #     testResultsFormat: 'JUnit'
+    #     testResultsFiles: |
+    #       junit.xml
+    #       **/*junit*.xml
+    #     failTaskOnFailedTests: true
