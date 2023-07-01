@@ -9,9 +9,7 @@ const MyNavbar = ({ onNewDoc, onNewCategory }: Props) => {
   return (
     <Navbar bg='light' expand='lg' className='my-2'>
       <Container>
-        <Navbar.Brand href='#home'>
-          NoteDown (build: {process.env.REACT_APP_BUILD_ID})
-        </Navbar.Brand>
+        <Navbar.Brand href='#home'>NoteDown</Navbar.Brand>
         <Navbar.Toggle aria-controls='basic-navbar-nav' />
         <Navbar.Collapse id='basic-navbar-nav'>
           <Nav className='me-auto'>

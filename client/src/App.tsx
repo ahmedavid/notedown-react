@@ -5,9 +5,6 @@ import BoardTest from "./components/test/BoardTest"
 import NoteService, { Category, Note } from "./services/note.service"
 import MyModal from "./components/MyModal"
 
-const BUILD_ID = process.env.REACT_APP_BUILD_ID
-console.log("BUILD ID: ", BUILD_ID)
-
 export type ModalType = "note" | "category"
 
 export interface ModalData {

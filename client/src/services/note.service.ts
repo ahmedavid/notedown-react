@@ -1,8 +1,3 @@
-import dotenv from "dotenv"
-dotenv.config()
-
-const BUILD_ID = process.env.BUILD_ID
-console.log("BUILD ID: ", BUILD_ID)
 // const baseUrl = "http://localhost:3000/api"
 const baseUrl = "http://notedown.davidahmadov.net/api"
 
