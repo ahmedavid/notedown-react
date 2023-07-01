@@ -91,7 +91,7 @@ const BoardContent = ({
             readOnly={!editing}
             autoFocus={editing}
             defaultValue={selectedNote.content}
-            // value={selectedNote.content}
+            value={selectedNote.content}
             onChange={handleDocChange}
           ></MarkdownEditor>
         )}

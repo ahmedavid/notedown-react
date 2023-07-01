@@ -7,9 +7,9 @@ import noteRouter from "./routes/note"
 const app = express()
 
 const corsOptions = {
-  origin: ["*"],
+  origin: ["localhost:3001"],
 }
-app.use(cors(corsOptions))
+app.use(cors())
 
 app.use(express.json())
 

@@ -1,18 +1,17 @@
 import { useState } from "react"
 import { Button, Form, Modal } from "react-bootstrap"
 import { Category } from "../services/note.service"
+import { ModalData, ModalType } from "../App"
 
 interface Props {
   showModal: boolean
   handleSubmit: (obj: {
-    type: "note" | "category"
+    type: ModalType
     categoryId?: number
     value: string
   }) => void
   handleClose: () => void
-  modalTitle: string
-  modalLabel: string
-  modalType: "note" | "category"
+  modalData: ModalData
   categories: Category[]
 }
 
@@ -20,9 +19,7 @@ const MyModal = ({
   showModal,
   handleSubmit,
   handleClose,
-  modalLabel,
-  modalTitle,
-  modalType,
+  modalData: { label, title, type },
   categories,
 }: Props) => {
   const [value, setValue] = useState("")
@@ -35,22 +32,24 @@ const MyModal = ({
     <>
       <Modal show={showModal} onHide={onClose}>
         <Modal.Header closeButton>
-          <Modal.Title>{modalTitle}</Modal.Title>
+          <Modal.Title>{title}</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
           <Form>
             <Form.Group>
-              <Form.Label>{modalLabel}</Form.Label>
+              <Form.Label htmlFor='value'>{label}</Form.Label>
               <Form.Control
                 type='text'
+                id='value'
+                name='value'
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
               ></Form.Control>
             </Form.Group>
-            {modalType === "note" && (
+            {type === "note" && (
               <Form.Group>
-                <Form.Label>{modalLabel}</Form.Label>
+                <Form.Label>{label}</Form.Label>
                 <Form.Select
                   aria-label='Default select example'
                   onChange={(e) => setCategoryId(parseInt(e.target.value))}
@@ -74,11 +73,11 @@ const MyModal = ({
             variant='primary'
             onClick={() => {
               if (value.length > 0) {
-                if (modalType === "category") {
-                  handleSubmit({ type: modalType, value })
+                if (type === "category") {
+                  handleSubmit({ type: type, value })
                 }
-                if (modalType === "note") {
-                  handleSubmit({ type: modalType, categoryId, value })
+                if (type === "note") {
+                  handleSubmit({ type: type, categoryId, value })
                 }
                 onClose()
               }

@@ -5,12 +5,29 @@ import BoardTest from "./components/test/BoardTest"
 import NoteService, { Category, Note } from "./services/note.service"
 import MyModal from "./components/MyModal"
 
+export type ModalType = "note" | "category"
+
+export interface ModalData {
+  title: string
+  label: string
+  type: ModalType
+}
+
 const noteService = new NoteService()
 
 function App() {
   const [categories, setCategories] = useState<Category[]>([])
   const [selectedNote, setSelectedNote] = useState<Note | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+
+  const [showModal, setShowModal] = useState(false)
+  const [modaData, setModalData] = useState<ModalData>({
+    label: "",
+    title: "",
+    type: "category",
+  })
+  const [modalLabel, setModalLabel] = useState("")
+  const [modalType, setModalType] = useState<"note" | "category">("note")
 
   const handleNoteSelected = (noteId: string | null) => {
     console.log("NOTE ID: ", noteId)
@@ -89,20 +106,9 @@ function App() {
     init()
   }, [])
 
-  const [showModal, setShowModal] = useState(false)
-  const [modalTitle, setModalTitle] = useState("")
-  const [modalLabel, setModalLabel] = useState("")
-  const [modalType, setModalType] = useState<"note" | "category">("note")
-
   const handleClose = () => setShowModal(false)
-  const handleShow = (
-    title: string,
-    label: string,
-    type: "note" | "category"
-  ) => {
-    setModalTitle(title)
-    setModalLabel(label)
-    setModalType(type)
+  const handleShow = (title: string, label: string, type: ModalType) => {
+    setModalData({ title, label, type })
     setShowModal(true)
   }
 
@@ -112,9 +118,7 @@ function App() {
         <MyModal
           categories={categories}
           showModal={showModal}
-          modalLabel={modalLabel}
-          modalTitle={modalTitle}
-          modalType={modalType}
+          modalData={modaData}
           handleClose={handleClose}
           handleSubmit={(data) => {
             console.log("Modal Data: ", data)
