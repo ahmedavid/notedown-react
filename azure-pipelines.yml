@@ -11,19 +11,37 @@ stages:
   - job: TestJob
     steps:
     - task: Bash@3
+      displayName: Clean Install
       inputs:
         targetType: 'inline'
         script: 'npm ci'
         workingDirectory: '$(System.DefaultWorkingDirectory)/client'
     - task: Bash@3
+      displayName: Run Tests
       inputs:
         targetType: 'inline'
         script: 'CI=true npm test'
         workingDirectory: '$(System.DefaultWorkingDirectory)/client'
-    - task: PublishTestResults@2
+
+- stage: Build
+  displayName: Build
+  jobs:
+  - job: Build
+    steps:
+    - task: Docker@2
       inputs:
-        testResultsFormat: 'JUnit'
-        testResultsFiles: |
-          junit.xml
-          **/*junit*.xml
-        failTaskOnFailedTests: true
+        containerRegistry: 'dockerhub-ahmedavid'
+        repository: 'ahmedavid/notedown-react'
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
+        buildContext: 'client'
+        tags: |
+          $(Build.BuildId)
+          latest
+    # - task: PublishTestResults@2
+    #   inputs:
+    #     testResultsFormat: 'JUnit'
+    #     testResultsFiles: |
+    #       junit.xml
+    #       **/*junit*.xml
+    #     failTaskOnFailedTests: true
