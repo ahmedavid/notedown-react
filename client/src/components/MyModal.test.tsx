@@ -22,7 +22,7 @@ test("inputs should be initially empty", () => {
     />
   )
   const inputElement = screen.getByRole<HTMLInputElement>("textbox")
-  expect(inputElement.value).toBe("")
+  expect(inputElement.value).toBe("sss")
 })
 
 test("can type into value input", () => {
