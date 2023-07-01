@@ -10,14 +10,19 @@ stages:
   jobs:
   - job: TestJob
     steps:
-    - task: Npm@1
-      displayName: Install Dependencies
+    - task: Bash@3
       inputs:
-        command: 'ci'
-        workingDir: 'client'
-    - task: Npm@1
-      displayName: Run Tests
+        targetType: 'inline'
+        script: 'npm ci'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/client'
+    - task: Bash@3
       inputs:
-        command: 'custom'
-        workingDir: 'client'
-        customCommand: 'test -- --watchAll=false'
+        targetType: 'inline'
+        script: 'CI=true npm test -- --reporters=jest-junit --reporters=default'
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: |
+          junit.xml
+          **/*junit*.xml
+        failTaskOnFailedTests: true
