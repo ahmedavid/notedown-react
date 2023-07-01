@@ -38,6 +38,11 @@ stages:
         tags: |
           $(Build.BuildId)
           latest
+    # - task: KubernetesManifest@1
+    #   inputs:
+    #     action: 'deploy'
+    #     connectionType: 'kubernetesServiceConnection'
+    #     namespace: 'notedown'
     # - task: PublishTestResults@2
     #   inputs:
     #     testResultsFormat: 'JUnit'
