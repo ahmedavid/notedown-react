@@ -18,6 +18,7 @@ const noteService = new NoteService()
 function App() {
   const [categories, setCategories] = useState<Category[]>([])
   const [selectedNote, setSelectedNote] = useState<Note | null>(null)
+  const [selectedNoteId, setSelectedNoteId] = useState<string|null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
   const [showModal, setShowModal] = useState(false)
@@ -33,6 +34,7 @@ function App() {
     console.log("NOTE ID: ", noteId)
     if (noteId) {
       setIsLoading(true)
+      setSelectedNoteId(noteId)
       noteService
         .getNoteById(parseInt(noteId))
         .then((note) => {
@@ -92,6 +94,7 @@ function App() {
     if (noteIndex !== -1) {
       categories[catIndex].notes.splice(noteIndex, 1)
       setCategories([...categories])
+      setSelectedNote(null)
     }
   }
 
@@ -140,6 +143,7 @@ function App() {
         <BoardTest
           isLoading={isLoading}
           selectedNote={selectedNote}
+          selectedNoteId={selectedNoteId}
           categories={categories}
           onNoteSelected={handleNoteSelected}
           onUpdateNote={handleUpdateNote}

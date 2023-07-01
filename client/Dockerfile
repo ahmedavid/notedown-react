@@ -1,11 +1,13 @@
-FROM arm64v8/node:20.3.1-alpine3.17
-
+FROM arm64v8/node:20-alpine3.17 as build-env
 WORKDIR /app
 COPY . .
-RUN apk update && \
-    apk add --no-cache nodejs npm
-RUN npm install
+RUN npm ci && npm run build
 
-CMD npm start
-EXPOSE 3000
+FROM arm64v8/nginx:1.25.1-alpine3.17 
+COPY --from=build-env /app/build /usr/share/nginx/html
+RUN rm /etc/nginx/conf.d/default.conf
+COPY nginx/nginx.conf /etc/nginx/conf.d
+
+EXPOSE 8080
+CMD ["nginx", "-g", "daemon off;"]
 

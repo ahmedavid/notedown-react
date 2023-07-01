@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notedown-react-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notedown-react
+  template:
+    metadata:
+      labels:
+        app: notedown-react
+    spec:
+      containers:
+        - name: notedown-react
+          image: ahmedavid/notedown-react:latest
+          ports:
+            - containerPort: 8080
+
+---
+# postgres-service.yaml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: notedown-react-svc
+spec:
+  selector:
+    app: notedown-react
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
