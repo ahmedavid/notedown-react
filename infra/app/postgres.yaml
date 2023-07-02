@@ -15,6 +15,14 @@ spec:
       containers:
         - name: postgres
           image: postgres:latest
+          readinessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            exec:
+              command:
+                - sh
+                - -c
+                - exec psql -U postgres -c "SELECT 1"
           ports:
             - containerPort: 5432
           env:
