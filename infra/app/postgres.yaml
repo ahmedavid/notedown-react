@@ -23,7 +23,7 @@ spec:
               command:
                 - sh
                 - -c
-                - exec psql -U admin -c "SELECT 1"
+                - exec psql -U admin -d postgres -c "SELECT 1"
           ports:
             - containerPort: 5432
           env:
