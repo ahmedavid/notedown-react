@@ -2,7 +2,7 @@ name: Tag Workflow
 on:
   push:
     tags:
-      - '*'
+      - "*"
 
 jobs:
   build:
@@ -11,7 +11,7 @@ jobs:
       - name: Extract Tag Name
         run: echo "Tag name is ${{ env.TAG_NAME }}"
         env:
-          TAG_NAME: ${{ github.ref.replace('refs/tags/', '') }}
+          TAG_NAME: ${{ github.ref_name }}
 
       - name: Perform Action Based on Tag Name
         run: |
