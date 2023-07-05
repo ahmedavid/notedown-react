@@ -6,13 +6,12 @@ on:
 
 jobs:
   build:
+    env:
+      TAG_NAME: ${{ github.ref_name }}
     runs-on: ubuntu-latest
     steps:
       - name: Extract Tag Name
         run: echo "Tag name is ${{ env.TAG_NAME }}"
-        env:
-          TAG_NAME: ${{ github.ref_name }}
-
       - name: Perform Action Based on Tag Name
         run: |
           if [[ "${{ env.TAG_NAME }}" == *-dev ]]; then
