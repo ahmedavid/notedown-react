@@ -1,1 +1,12 @@
+name: Tag Workflow
+on:
+  push:
+    tags:
+      - '*'
 
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print Tag Name
+        run: echo "The created tag is ${{ github.ref }}"
