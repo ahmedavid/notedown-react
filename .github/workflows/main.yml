@@ -9,4 +9,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print Tag Name
-        run: echo "The created tag is ${{ github.ref }}"
+        run: echo "The created tag is ${GITHUB_REF#refs/tags/}"
