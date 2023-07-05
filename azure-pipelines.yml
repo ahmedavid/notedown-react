@@ -39,13 +39,6 @@ stages:
           $(Build.BuildId)
           latest
 
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: |
-          cat ./infra/app/client.yaml | sed 's#ahmedavid/notedown-react:latest:ahmedavid/notedown-react:$(Build.BuildId)#' | kubectl apply -f -
-
-
     - task: DownloadSecureFile@1
       displayName: Download Kube Config
       name: kubeconfig
@@ -56,10 +49,18 @@ stages:
       inputs:
         kubectlVersion: 'latest'
     - task: Bash@3
-      displayName: Kubectl Apply
       inputs:
         targetType: 'inline'
-        script: 'kubectl --kubeconfig=$(kubeconfig.secureFilePath) apply -f ./infra/app/client.yaml'
+        script: |
+          cat ./infra/app/client.yaml | sed 's#ahmedavid/notedown-react:latest:ahmedavid/notedown-react:$(Build.BuildId)#' | kubectl --kubeconfig=$(kubeconfig.secureFilePath) apply -f -
+
+
+
+    # - task: Bash@3
+    #   displayName: Kubectl Apply
+    #   inputs:
+    #     targetType: 'inline'
+    #     script: 'kubectl --kubeconfig=$(kubeconfig.secureFilePath) apply -f ./infra/app/client.yaml'
     # - task: KubernetesManifest@1
     #   inputs:
     #     action: 'deploy'
