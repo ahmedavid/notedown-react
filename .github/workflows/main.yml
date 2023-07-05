@@ -11,7 +11,7 @@ jobs:
       - name: Extract Tag Name
         run: echo "Tag name is ${{ env.TAG_NAME }}"
         env:
-          TAG_NAME: ${{ github.ref#refs/tags/ }}
+          TAG_NAME: ${{ github.ref.replace('refs/tags/', '') }}
 
       - name: Perform Action Based on Tag Name
         run: |
