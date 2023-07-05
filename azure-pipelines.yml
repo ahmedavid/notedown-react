@@ -52,7 +52,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          cat ./infra/app/client.yaml | sed 's#ahmedavid/notedown-react:latest:ahmedavid/notedown-react:$(Build.BuildId)#' | kubectl --kubeconfig=$(kubeconfig.secureFilePath) apply -f -
+          cat ./infra/app/client.yaml | sed 's#ahmedavid/notedown-react:latest#ahmedavid/notedown-react:$(Build.BuildId)#' | kubectl --kubeconfig=$(kubeconfig.secureFilePath) apply -f -
 
 
 
