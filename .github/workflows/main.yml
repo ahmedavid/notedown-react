@@ -8,5 +8,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Print Tag Name
-        run: echo "The created tag is ${GITHUB_REF#refs/tags/}"
+      - name: Extract Tag Name
+        run: echo "Tag name is ${{ env.TAG_NAME }}"
+        env:
+          TAG_NAME: ${{ github.ref#refs/tags/ }}
+
+      - name: Perform Action Based on Tag Name
+        run: |
+          if [[ "${{ env.TAG_NAME }}" == *-dev ]]; then
+            echo "This is a dev tag. Perform dev actions here."
+            # Add your dev-specific actions here
+          elif [[ "${{ env.TAG_NAME }}" == *-prod ]]; then
+            echo "This is a prod tag. Perform prod actions here."
+            # Add your prod-specific actions here
+          else
+            echo "Tag name does not match any expected pattern."
+            # Add actions for handling other tags here, if needed
+          fi
