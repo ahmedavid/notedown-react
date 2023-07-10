@@ -45,7 +45,7 @@ stages:
         script: cat ./infra/app/client.yaml | sed 's#ahmedavid/notedown-react:latest#ahmedavid/notedown-react:$(Build.BuildId)#'
     - task: PublishPipelineArtifact@1
       inputs:
-        targetPath: '$(Pipeline.Workspace)/infra/app'
+        targetPath: '$(Pipeline.Workspace)/notedown-react/infra/app'
         artifact: 'notedown-kube-manifests'
         publishLocation: 'pipeline'
 
