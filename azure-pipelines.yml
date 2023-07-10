@@ -47,7 +47,7 @@ stages:
           ls -R
     - task: PublishPipelineArtifact@1
       inputs:
-        targetPath: '$(System.DefaultWorkingDirectory)/notedown-react/infra/app'
+        targetPath: '$(System.DefaultWorkingDirectory)/infra/app'
         artifact: 'notedown-kube-manifests'
         publishLocation: 'pipeline'
 
