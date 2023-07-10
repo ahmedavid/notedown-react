@@ -29,6 +29,7 @@ stages:
   - job: Build
     steps:
     - task: Docker@2
+      displayName: Build Docker Image
       inputs:
         containerRegistry: 'dockerhub-ahmedavid'
         repository: 'ahmedavid/notedown-react'
@@ -38,6 +39,15 @@ stages:
         tags: |
           $(Build.BuildId)
           latest
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: cat ./infra/app/client.yaml | sed 's#ahmedavid/notedown-react:latest#ahmedavid/notedown-react:$(Build.BuildId)#' ./infra/app/client.yaml>
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(Pipeline.Workspace)/infra/app'
+        artifact: 'notedown-kube-manifests'
+        publishLocation: 'pipeline'
 
     # - task: DownloadSecureFile@1
     #   displayName: Download Kube Config
