@@ -42,10 +42,12 @@ stages:
     - task: Bash@3
       inputs:
         targetType: 'inline'
-        script: cat ./infra/app/client.yaml | sed 's#ahmedavid/notedown-react:latest#ahmedavid/notedown-react:$(Build.BuildId)#'
+        script: | 
+          cat ./infra/app/client.yaml | sed 's#ahmedavid/notedown-react:latest#ahmedavid/notedown-react:$(Build.BuildId)#'
+          ls -R
     - task: PublishPipelineArtifact@1
       inputs:
-        targetPath: '$(Pipeline.Workspace)/notedown-react/infra/app'
+        targetPath: '$(System.DefaultWorkingDirectory)/notedown-react/infra/app'
         artifact: 'notedown-kube-manifests'
         publishLocation: 'pipeline'
 
