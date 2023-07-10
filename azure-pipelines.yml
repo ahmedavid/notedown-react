@@ -44,8 +44,9 @@ stages:
           - task: Bash@3
             inputs:
               targetType: "inline"
+              workingDirectory: $(System.DefaultWorkingDirectory)
               script: |
-                cat ./infra/app/client.yaml | sed 's#ahmedavid/notedown-react:latest#ahmedavid/notedown-react:$(Build.BuildId)#'
+                cat ./infra/app/client.yaml | sed 's#ahmedavid/notedown-react:latest#ahmedavid/notedown-react:$(Build.BuildId)#' > ./infra/app/client.yaml
                 ls -R
           - task: PublishPipelineArtifact@1
             inputs:
