@@ -42,7 +42,7 @@ stages:
     - task: Bash@3
       inputs:
         targetType: 'inline'
-        script: cat ./infra/app/client.yaml | sed 's#ahmedavid/notedown-react:latest#ahmedavid/notedown-react:$(Build.BuildId)#' > ./infra/app/client.yaml>
+        script: cat ./infra/app/client.yaml | sed 's#ahmedavid/notedown-react:latest#ahmedavid/notedown-react:$(Build.BuildId)#'
     - task: PublishPipelineArtifact@1
       inputs:
         targetPath: '$(Pipeline.Workspace)/infra/app'
