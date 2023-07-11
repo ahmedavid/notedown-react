@@ -2,6 +2,9 @@ trigger:
   branches:
     include:
       - dev
+  paths:
+    include:
+      - client/**
 
 pool:
   name: ArmPool
