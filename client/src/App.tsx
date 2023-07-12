@@ -89,6 +89,18 @@ function App() {
     setIsLoading(false)
   }
 
+  const handleDeleteCategory = async (category: Category) => {
+    setIsLoading(true)
+    try {
+      await noteService.deleteCategory(category)
+      setCategories(categories.filter(c => c.id !== category.id))
+    } catch (error) {
+      console.log(error)
+    }
+    setIsLoading(false)
+  }
+
+
   const handleDeleteNote = async (noteId: number, categoryId: number) => {
     await noteService.deleteNote(noteId)
     const catIndex = categories.findIndex((c) => c.id === categoryId)
@@ -144,11 +156,12 @@ function App() {
             handleCreateCategory(data.value)
           }
         }}
+        onDeleteCategory={(category) => handleDeleteCategory(category)}
       />
       <MyNavbar
         onNewDoc={() => handleShow("Note Title", "Note Label", "note")}
         onNewCategory={() =>
-          handleShow("Category Title", "Category Label", "category")
+          handleShow("Manage Category", "New Category Label", "category")
         }
       />
       <div className='container'>

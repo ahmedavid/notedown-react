@@ -44,6 +44,20 @@ class NoteService {
     return (await (response.json() as Promise<{ data: any }>)).data.id
   }
 
+  async deleteCategory(category: Category) {
+    if(category.notes.length > 0) throw new Error("Only empty categories can be deleted")
+    try {
+      const response = await fetch(`${baseUrl}/category/8`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ categoryId: category.id }),
+      })
+      await response.json()
+    } catch (error) {
+      throw new Error("Failed to delete")
+    }
+  }
+
   async getCategories(): Promise<Category[]> {
     if (this.categories.length > 0) return this.categories
     const response = await fetch(baseUrl + "/category/4")

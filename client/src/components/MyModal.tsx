@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Button, Form, Modal } from "react-bootstrap"
+import { Button, Form, ListGroup, Modal } from "react-bootstrap"
 import { Category } from "../services/note.service"
 import { ModalData, ModalType } from "../App"
 
@@ -13,6 +13,7 @@ interface Props {
   handleClose: () => void
   modalData: ModalData
   categories: Category[]
+  onDeleteCategory: (category: Category) => void
 }
 
 const MyModal = ({
@@ -21,6 +22,7 @@ const MyModal = ({
   handleClose,
   modalData: { label, title, type },
   categories,
+  onDeleteCategory
 }: Props) => {
   const [value, setValue] = useState("")
   const [categoryId, setCategoryId] = useState<number | undefined>(undefined)
@@ -70,6 +72,20 @@ const MyModal = ({
                   ))}
                 </Form.Select>
               </Form.Group>
+            )}
+
+            {type === "category" && (
+              <>
+              <ListGroup className="mt-4">
+                {categories.map(cat => <ListGroup.Item key={cat.id}>
+                  <div className="d-flex justify-content-between align-items-center">
+                    <span>{cat.title}</span>
+                    <Button onClick={() => onDeleteCategory(cat)} disabled={cat.notes.length > 0} variant="danger">Delete</Button>
+                  </div>
+                </ListGroup.Item>)}
+              </ListGroup>
+              <span className="fw-light">Note: only empty categories can be deleted</span>
+              </>
             )}
           </Form>
         </Modal.Body>

@@ -15,7 +15,7 @@ const MyNavbar = ({ onNewDoc, onNewCategory }: Props) => {
           <Nav className='me-auto'>
             <Button onClick={onNewDoc}>New Note</Button>
             <Button onClick={onNewCategory} className='mx-2'>
-              New Category
+              Manage Category
             </Button>
 
             <span>{window.API_URL} v4 </span>
