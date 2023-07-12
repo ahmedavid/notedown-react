@@ -17,6 +17,8 @@ const MyNavbar = ({ onNewDoc, onNewCategory }: Props) => {
             <Button onClick={onNewCategory} className='mx-2'>
               New Category
             </Button>
+
+            <span>{window.API_URL}</span>
           </Nav>
         </Navbar.Collapse>
       </Container>
