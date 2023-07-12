@@ -13,13 +13,19 @@ export interface ModalData {
   type: ModalType
 }
 
+export interface MyAlert {
+  type: string
+  message: string
+}
+
 const noteService = new NoteService()
 
 function App() {
   const [categories, setCategories] = useState<Category[]>([])
   const [selectedNote, setSelectedNote] = useState<Note | null>(null)
-  const [selectedNoteId, setSelectedNoteId] = useState<string|null>(null)
+  const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [alert, setAlert] = useState<MyAlert | null>(null)
 
   const [showModal, setShowModal] = useState(false)
   const [modaData, setModalData] = useState<ModalData>({
@@ -27,8 +33,6 @@ function App() {
     title: "",
     type: "category",
   })
-  const [modalLabel, setModalLabel] = useState("")
-  const [modalType, setModalType] = useState<"note" | "category">("note")
 
   const handleNoteSelected = (noteId: string | null) => {
     console.log("NOTE ID: ", noteId)
@@ -109,30 +113,38 @@ function App() {
     init()
   }, [])
 
+  const handleAlert = (type: string, message: string) => {
+    setAlert({ type, message })
+    setTimeout(() => setAlert(null), 2000)
+  }
   const handleClose = () => setShowModal(false)
   const handleShow = (title: string, label: string, type: ModalType) => {
+    // If categories empty, show error
+    if (type === "note" && categories.length === 0) {
+      handleAlert("danger", "Create a category first")
+      return
+    }
     setModalData({ title, label, type })
     setShowModal(true)
   }
 
   return (
     <>
-      {categories.length > 0 && (
-        <MyModal
-          categories={categories}
-          showModal={showModal}
-          modalData={modaData}
-          handleClose={handleClose}
-          handleSubmit={(data) => {
-            console.log("Modal Data: ", data)
-            if (data.categoryId) {
-              handleCreateNote(data.value, data.categoryId)
-            } else {
-              handleCreateCategory(data.value)
-            }
-          }}
-        />
-      )}
+      <MyModal
+        categories={categories}
+        showModal={showModal}
+        modalData={modaData}
+        handleClose={handleClose}
+        handleSubmit={(data) => {
+          console.log("Modal Data: ", data)
+
+          if (data.type === "note" && data.categoryId) {
+            handleCreateNote(data.value, data.categoryId)
+          } else {
+            handleCreateCategory(data.value)
+          }
+        }}
+      />
       <MyNavbar
         onNewDoc={() => handleShow("Note Title", "Note Label", "note")}
         onNewCategory={() =>
@@ -141,6 +153,7 @@ function App() {
       />
       <div className='container'>
         <BoardTest
+          alert={alert}
           isLoading={isLoading}
           selectedNote={selectedNote}
           selectedNoteId={selectedNoteId}

@@ -20,7 +20,7 @@ model Note {
   title      String
   content    String
   categoryId Int
-  Category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  Category   Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
 }
 
 model User {

@@ -15,6 +15,11 @@ spec:
       containers:
         - name: notedown-react
           image: ahmedavid/notedown-react:latest
+          env:
+            - name: API_URL
+              value: "REPLACE_API_URL"
+            - name: REACT_APP_BUILD_ID
+              value: "TEST_KUBE"
           ports:
             - containerPort: 8080
 

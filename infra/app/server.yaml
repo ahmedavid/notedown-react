@@ -12,6 +12,14 @@ spec:
       labels:
         app: notedown-react-server
     spec:
+      initContainers:
+        - name: wait-for-postgresql
+          image: busybox:latest
+          command:
+            ["sh", "-c", "until nc -z postgres-svc 5432; do sleep 5; done;"]
+        - name: db-init
+          image: ahmedavid/notedown-react-server:latest
+          command: ["sh", "-c", "npx prisma db push"]
       containers:
         - name: notedown-react-server
           image: ahmedavid/notedown-react-server:latest

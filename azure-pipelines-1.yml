@@ -1,19 +1,39 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
-- main
+  branches:
+    include:
+      - dev
+  paths:
+    include:
+      - server/**
 
 pool:
-  vmImage: ubuntu-latest
+  name: ArmPool
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+stages:
+  - stage: Build
+    displayName: Build
+    jobs:
+      - job: Build
+        steps:
+          - task: Docker@2
+            displayName: Build Docker Image
+            inputs:
+              containerRegistry: "dockerhub-ahmedavid"
+              repository: "ahmedavid/notedown-react-server"
+              command: "buildAndPush"
+              Dockerfile: "**/Dockerfile"
+              buildContext: "server"
+              tags: |
+                $(Build.BuildId)
+                latest
+          - task: Bash@3
+            inputs:
+              targetType: "inline"
+              workingDirectory: $(System.DefaultWorkingDirectory)
+              script: |
+                cat ./infra/app/server.yaml | sed 's#ahmedavid/notedown-react-server:latest#ahmedavid/notedown-react-server:$(Build.BuildId)#' > ./infra/app/server.yaml
+          - task: PublishPipelineArtifact@1
+            inputs:
+              targetPath: "$(System.DefaultWorkingDirectory)/infra/app"
+              artifact: "notedown-kube-manifests"
+              publishLocation: "pipeline"

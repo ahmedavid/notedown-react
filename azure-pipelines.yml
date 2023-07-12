@@ -1,19 +1,90 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
-- main
+  branches:
+    include:
+      - dev
+  paths:
+    include:
+      - client/**
 
 pool:
-  vmImage: ubuntu-latest
+  name: ArmPool
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+stages:
+  - stage: Test
+    displayName: Test
+    jobs:
+      - job: TestJob
+        steps:
+          - task: Bash@3
+            displayName: Clean Install
+            inputs:
+              targetType: "inline"
+              script: "npm ci"
+              workingDirectory: "$(System.DefaultWorkingDirectory)/client"
+          - task: Bash@3
+            displayName: Run Tests
+            inputs:
+              targetType: "inline"
+              script: "CI=true npm test"
+              workingDirectory: "$(System.DefaultWorkingDirectory)/client"
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+  - stage: Build
+    displayName: Build
+    jobs:
+      - job: Build
+        steps:
+          - task: Docker@2
+            displayName: Build Docker Image
+            inputs:
+              containerRegistry: "dockerhub-ahmedavid"
+              repository: "ahmedavid/notedown-react"
+              command: "buildAndPush"
+              Dockerfile: "**/Dockerfile"
+              buildContext: "client"
+              tags: |
+                $(Build.BuildId)
+                latest
+          - task: Bash@3
+            inputs:
+              targetType: "inline"
+              workingDirectory: $(System.DefaultWorkingDirectory)
+              script: |
+                sed -i 's#ahmedavid/notedown-react:latest#ahmedavid/notedown-react:$(Build.BuildId)#' ./infra/app/client.yaml
+          - task: PublishPipelineArtifact@1
+            inputs:
+              targetPath: "$(System.DefaultWorkingDirectory)/infra/app"
+              artifact: "notedown-kube-manifests"
+              publishLocation: "pipeline"
+
+        # - task: DownloadSecureFile@1
+        #   displayName: Download Kube Config
+        #   name: kubeconfig
+        #   inputs:
+        #     secureFile: 'kubeconfig'
+        # - task: KubectlInstaller@0
+        #   displayName: Install Kubectl
+        #   inputs:
+        #     kubectlVersion: 'latest'
+        # - task: Bash@3
+        #   inputs:
+        #     targetType: 'inline'
+        #     script: |
+        #       cat ./infra/app/client.yaml | sed 's#ahmedavid/notedown-react:latest#ahmedavid/notedown-react:$(Build.BuildId)#' | kubectl --kubeconfig=$(kubeconfig.secureFilePath) apply -f -
+
+        # - task: Bash@3
+        #   displayName: Kubectl Apply
+        #   inputs:
+        #     targetType: 'inline'
+        #     script: 'kubectl --kubeconfig=$(kubeconfig.secureFilePath) apply -f ./infra/app/client.yaml'
+        # - task: KubernetesManifest@1
+        #   inputs:
+        #     action: 'deploy'
+        #     connectionType: 'kubernetesServiceConnection'
+        #     namespace: 'notedown'
+        # - task: PublishTestResults@2
+        #   inputs:
+        #     testResultsFormat: 'JUnit'
+        #     testResultsFiles: |
+        #       junit.xml
+        #       **/*junit*.xml
+        #     failTaskOnFailedTests: true

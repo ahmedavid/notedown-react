@@ -1,10 +1,12 @@
-import { Col, Nav, Row, Tab } from "react-bootstrap"
+import { Alert, Col, Row, Tab } from "react-bootstrap"
 import BoardNav from "./BoardNav"
 import BoardContent from "./BoardContent"
 import { Category, Note } from "../../services/note.service"
+import { MyAlert } from "../../App"
 
 interface Props {
   isLoading: boolean
+  alert: MyAlert | null
   categories: Category[]
   onNoteSelected: (noteId: string | null) => void
   onUpdateNote: (noteId: number, categoryId: number, content: string) => void
@@ -18,6 +20,7 @@ const BoardTest = ({
   selectedNote,
   selectedNoteId,
   isLoading,
+  alert,
   onNoteSelected,
   onUpdateNote,
   onDeleteNote,
@@ -32,9 +35,14 @@ const BoardTest = ({
     >
       <Row>
         <Col sm={3}>
-          <BoardNav categories={categories} isLoading={isLoading} selectedNoteId={selectedNoteId} />
+          <BoardNav
+            categories={categories}
+            isLoading={isLoading}
+            selectedNoteId={selectedNoteId}
+          />
         </Col>
         <Col sm={9}>
+          {alert && <Alert variant={alert.type}>{alert.message}</Alert>}
           <BoardContent
             onDeleteNote={onDeleteNote}
             isLoading={isLoading}

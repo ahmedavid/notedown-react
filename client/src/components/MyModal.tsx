@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button, Form, Modal } from "react-bootstrap"
 import { Category } from "../services/note.service"
 import { ModalData, ModalType } from "../App"
@@ -23,11 +23,20 @@ const MyModal = ({
   categories,
 }: Props) => {
   const [value, setValue] = useState("")
-  const [categoryId, setCategoryId] = useState(categories[0].id)
+  const [categoryId, setCategoryId] = useState<number | undefined>(undefined)
   const onClose = () => {
     setValue("")
     handleClose()
   }
+
+  useEffect(() => {
+    if (categories.length > 0) {
+      setCategoryId(categories[0].id)
+    } else {
+      setCategoryId(undefined)
+    }
+  }, [categories])
+
   return (
     <>
       <Modal show={showModal} onHide={onClose}>
@@ -54,7 +63,7 @@ const MyModal = ({
                   aria-label='Default select example'
                   onChange={(e) => setCategoryId(parseInt(e.target.value))}
                 >
-                  {categories.map((cat) => (
+                  {categories?.map((cat) => (
                     <option key={cat.id} value={cat.id}>
                       {cat.title}
                     </option>
