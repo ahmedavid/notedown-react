@@ -1,4 +1,4 @@
-trigger:
+pr:
   branches:
     include:
       - dev
@@ -31,7 +31,7 @@ stages:
               targetType: "inline"
               workingDirectory: $(System.DefaultWorkingDirectory)
               script: |
-                cat ./infra/app/server.yaml | sed 's#ahmedavid/notedown-react-server:latest#ahmedavid/notedown-react-server:$(Build.BuildId)#' > ./infra/app/server.yaml
+                sed -i 's#ahmedavid/notedown-react-server:latest#ahmedavid/notedown-react-server:$(Build.BuildId)#' ./infra/app/server.yaml
           - task: PublishPipelineArtifact@1
             inputs:
               targetPath: "$(System.DefaultWorkingDirectory)/infra/app"
