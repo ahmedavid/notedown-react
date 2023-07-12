@@ -1,7 +1,7 @@
-trigger:
+pr:
   branches:
     include:
-      - dev
+      - main
   paths:
     include:
       - client/**
