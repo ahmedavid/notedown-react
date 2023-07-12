@@ -18,7 +18,7 @@ const MyNavbar = ({ onNewDoc, onNewCategory }: Props) => {
               New Category
             </Button>
 
-            <span>{window.API_URL}</span>
+            <span>{window.API_URL} v2</span>
           </Nav>
         </Navbar.Collapse>
       </Container>
