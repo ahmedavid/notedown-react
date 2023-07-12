@@ -19,6 +19,7 @@ test("inputs should be initially empty", () => {
       handleClose={handleClose}
       modalData={modalData as ModalData}
       categories={categories as Category[]}
+      onDeleteCategory={() => {}}
     />
   )
   const inputElement = screen.getByRole<HTMLInputElement>("textbox")
@@ -40,6 +41,7 @@ test("can type into value input", () => {
       handleClose={handleClose}
       modalData={modalData as ModalData}
       categories={categories as Category[]}
+      onDeleteCategory={() => {}}
     />
   )
   const inputElement = screen.getByRole<HTMLInputElement>("textbox", {
