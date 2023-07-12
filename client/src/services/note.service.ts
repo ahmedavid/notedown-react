@@ -1,5 +1,16 @@
 // const baseUrl = "http://localhost:3000/api"
-const baseUrl = "http://notedown.davidahmadov.net/api"
+
+declare global {
+  interface Window {
+    API_URL: string;
+  }
+}
+
+let baseUrl = "http://notedown.davidahmadov.net/api"
+
+if (window.API_URL !== "REPLACE_API_URL") {
+  baseUrl = window.API_URL
+}
 
 export interface Category {
   id: number
