@@ -49,11 +49,7 @@ stages:
               targetType: "inline"
               workingDirectory: $(System.DefaultWorkingDirectory)
               script: |
-                echo "BEFORE"
-                cat ./infra/app/client.yaml
                 cat ./infra/app/client.yaml | sed 's#ahmedavid/notedown-react:latest#ahmedavid/notedown-react:$(Build.BuildId)#' > ./infra/app/client.yaml
-                echo "AFTER"
-                cat ./infra/app/client.yaml
           - task: PublishPipelineArtifact@1
             inputs:
               targetPath: "$(System.DefaultWorkingDirectory)/infra/app"
