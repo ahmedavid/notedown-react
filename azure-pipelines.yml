@@ -81,7 +81,7 @@ stages:
           inputs:
             targetType: 'inline'
             script: |
-              'sed -i 's#ahmedavid/notedown-react:latest#ahmedavid/notedown-react:$(Build.BuildId)#' ./infra/app/client.yaml
+              sed -i 's#ahmedavid/notedown-react:latest#ahmedavid/notedown-react:$(Build.BuildId)#' ./infra/app/client.yaml
             workingDirectory: '$(System.DefaultWorkingDirectory)'
         - task: PublishPipelineArtifact@1
           inputs:
