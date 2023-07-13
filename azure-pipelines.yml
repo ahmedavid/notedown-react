@@ -22,7 +22,7 @@ stages:
           - task: Cache@2
             displayName: Cache NPM packages
             inputs:
-              key: 'package-lock.json'
+              key: './client/package-lock.json'
               path: '$(npm_config_cache)'
           - task: Bash@3
             displayName: Clean Install
