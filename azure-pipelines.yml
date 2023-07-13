@@ -6,13 +6,13 @@ trigger:
     include:
       - client/**
 
-# pr:
-#   branches:
-#     include:
-#       - dev-*
-#   paths:
-#     include:
-#       - client/**
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - client/**
 
 pool:
   name: ArmPool
