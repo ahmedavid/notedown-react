@@ -1,13 +1,16 @@
 trigger:
   branches:
     include:
-      - main
+      - dev-*
   paths:
     include:
       - client/**
 
 pool:
   name: ArmPool
+
+variables:
+  npm_config_cache: $(Pipeline.Workspace)/.npm
 
 stages:
   - stage: Test
@@ -16,11 +19,16 @@ stages:
     jobs:
       - job: TestJob
         steps:
+          - task: Cache@2
+            displayName: Cache NPM packages
+            inputs:
+              key: 'package-lock.json'
+              path: '$(npm_config_cache)'
           - task: Bash@3
             displayName: Clean Install
             inputs:
               targetType: "inline"
-              script: "npm ci"
+              script: "npm ci --cache $(npm_config_cache)"
               workingDirectory: "$(System.DefaultWorkingDirectory)/client"
           - task: Bash@3
             displayName: Run Tests
@@ -28,37 +36,3 @@ stages:
               targetType: "inline"
               script: "CI=true npm test"
               workingDirectory: "$(System.DefaultWorkingDirectory)/client"
-
-  - stage: Build
-    displayName: Build
-    jobs:
-      - job: Build
-        steps:
-          - task: Docker@2
-            displayName: Build Docker Image
-            inputs:
-              containerRegistry: "dockerhub-ahmedavid"
-              repository: "ahmedavid/notedown-react"
-              command: "buildAndPush"
-              Dockerfile: "**/Dockerfile"
-              buildContext: "client"
-              tags: |
-                $(Build.BuildId)
-                latest
-  - stage: Publish
-    condition: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')] 
-    displayName: Publish
-    jobs:
-      - job: Publish
-        steps:
-          - task: Bash@3
-            inputs:
-              targetType: "inline"
-              workingDirectory: $(System.DefaultWorkingDirectory)
-              script: |
-                sed -i 's#ahmedavid/notedown-react:latest#ahmedavid/notedown-react:$(Build.BuildId)#' ./infra/app/client.yaml
-          - task: PublishPipelineArtifact@1
-            inputs:
-              targetPath: "$(System.DefaultWorkingDirectory)/infra/app"
-              artifact: "notedown-kube-manifests"
-              publishLocation: "pipeline"
