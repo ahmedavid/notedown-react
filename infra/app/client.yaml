@@ -18,6 +18,8 @@ spec:
           env:
             - name: API_URL
               value: "REPLACE_API_URL"
+            - name: BUILD_ID
+              value: "REPLACE_BUILD_ID"              
             - name: REACT_APP_BUILD_ID
               value: "TEST_KUBE"
           ports:
