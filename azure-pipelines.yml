@@ -59,10 +59,8 @@ stages:
             tags: |
               $(Build.BuildId)
               latest
-      - job: PushJob
-        condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
-        steps:
         - task: Docker@2
+          condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
           inputs:
             containerRegistry: 'dockerhub-ahmedavid'
             repository: 'ahmedavid/notedown-react'
