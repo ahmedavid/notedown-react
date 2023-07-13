@@ -3,6 +3,7 @@
 declare global {
   interface Window {
     API_URL: string;
+    BUILD_ID: string;
   }
 }
 
