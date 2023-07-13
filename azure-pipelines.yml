@@ -22,7 +22,6 @@ variables:
 
 stages:
   - stage: Test
-    condition: 
     displayName: Test
     jobs:
       - job: TestJob
@@ -44,3 +43,24 @@ stages:
               targetType: "inline"
               script: "CI=true npm test"
               workingDirectory: "$(System.DefaultWorkingDirectory)/client"
+
+  - stage: BuildAndPush
+    displayName: Build and Push Docker image
+    jobs:
+      - job: BuildJob
+        steps:
+        - task: Docker@2
+          inputs:
+            containerRegistry: 'dockerhub-ahmedavid'
+            repository: 'ahmedavid/notedown-react'
+            command: 'build'
+            Dockerfile: '**/Dockerfile'
+            buildContext: 'client'
+      - job: PushJob
+        condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+        steps:
+        - task: Docker@2
+          inputs:
+            containerRegistry: 'dockerhub-ahmedavid'
+            repository: 'ahmedavid/notedown-react'
+            command: 'push'
