@@ -64,3 +64,21 @@ stages:
             containerRegistry: 'dockerhub-ahmedavid'
             repository: 'ahmedavid/notedown-react'
             command: 'push'
+
+  - stage: Publish
+    displayName: Publish
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+    jobs:
+      - job: ReplaceTag
+        steps:
+        - task: Bash@3
+          inputs:
+            targetType: 'inline'
+            script: |
+              'sed -i 's#ahmedavid/notedown-react:latest#ahmedavid/notedown-react:$(Build.BuildId)#'
+            workingDirectory: '$(System.DefaultWorkingDirectory)'
+        - task: PublishPipelineArtifact@1
+          inputs:
+            targetPath: "$(System.DefaultWorkingDirectory)/infra/app"
+            artifact: "notedown-kube-manifests"
+            publishLocation: "pipeline"
