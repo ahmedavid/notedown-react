@@ -12,12 +12,8 @@ if [ -n "$API_URL" ]; then
 sed -i -e "s|REPLACE_API_URL|$API_URL|g" /tmp/index.html
 fi
 
-# if [ -n "$CONFLUENCE_URI" ]; then
-# sed -i -e "s|REPLACE_CONFLUENCE_URI|$CONFLUENCE_URI|g" /tmp/index.html
-# fi
-
-# if [ -n "$INTRANET_URI" ]; then
-# sed -i -e "s|REPLACE_INTRANET_URI|$INTRANET_URI|g" /tmp/index.html
-# fi
+if [ -n "$BUILD_ID" ]; then
+sed -i -e "s|REPLACE_BUILD_ID|$BUILD_ID|g" /tmp/index.html
+fi
 
 cat /tmp/index.html > /usr/share/nginx/html/index.html
