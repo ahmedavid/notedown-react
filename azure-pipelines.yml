@@ -1,3 +1,11 @@
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - client/**
+
 pr:
   branches:
     include:
