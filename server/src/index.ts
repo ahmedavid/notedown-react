@@ -16,7 +16,12 @@ app.use(express.json())
 app.use("/api/category", categoryRouter)
 app.use("/api/user", userRouter)
 app.use("/api/note", noteRouter)
+app.get("/ready", (req, res) => {
+  res.send("Ready")
+})
 
-app.listen(3000, () =>
-  console.log("REST API server ready at: http://localhost:3000")
+const PORT = 3000
+
+app.listen(PORT, () =>
+  console.log("REST API ready at: http://localhost:", PORT)
 )

@@ -20,6 +20,10 @@ spec:
       containers:
         - name: notedown-react-server
           image: ahmedavid/notedown-react-server:latest
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 3000
           ports:
             - containerPort: 3000
 
