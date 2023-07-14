@@ -1,4 +1,4 @@
-pr:
+trigger:
   branches:
     include:
       - main
@@ -6,6 +6,13 @@ pr:
     include:
       - server/**
 
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - server/**
 pool:
   name: ArmPool
 
