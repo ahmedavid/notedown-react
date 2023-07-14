@@ -23,8 +23,8 @@ spec:
             - "sh"
             - "-c"
             - |
-            - npx prisma db push
-            - npx prisma db seed
+            - "npx prisma db push"
+            - "npx prisma db seed"
       containers:
         - name: notedown-react-server
           image: ahmedavid/notedown-react-server:latest
