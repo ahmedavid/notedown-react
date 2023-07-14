@@ -28,7 +28,7 @@ stages:
               containerRegistry: "dockerhub-ahmedavid"
               repository: "ahmedavid/notedown-react-server"
               command: "buildAndPush"
-              Dockerfile: "**/Dockerfile"
+              Dockerfile: "**/server/Dockerfile"
               buildContext: "server"
               tags: |
                 $(Build.BuildId)
