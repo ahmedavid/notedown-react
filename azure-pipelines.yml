@@ -64,7 +64,9 @@ stages:
           inputs:
             containerRegistry: 'dockerhub-ahmedavid'
             repository: 'ahmedavid/notedown-react'
-            command: 'push'
+            command: 'buildAndPush'
+            Dockerfile: '**/Dockerfile'
+            buildContext: 'client'
             tags: |
               $(Build.BuildId)
               latest
