@@ -22,7 +22,7 @@ const MyModal = ({
   handleClose,
   modalData: { label, title, type },
   categories,
-  onDeleteCategory
+  onDeleteCategory,
 }: Props) => {
   const [value, setValue] = useState("")
   const [categoryId, setCategoryId] = useState<number | undefined>(undefined)
@@ -38,6 +38,8 @@ const MyModal = ({
       setCategoryId(undefined)
     }
   }, [categories])
+
+  console.log("CATID: ", categoryId)
 
   return (
     <>
@@ -76,15 +78,25 @@ const MyModal = ({
 
             {type === "category" && (
               <>
-              <ListGroup className="mt-4">
-                {categories.map(cat => <ListGroup.Item key={cat.id}>
-                  <div className="d-flex justify-content-between align-items-center">
-                    <span>{cat.title}</span>
-                    <Button onClick={() => onDeleteCategory(cat)} disabled={cat.notes.length > 0} variant="danger">Delete</Button>
-                  </div>
-                </ListGroup.Item>)}
-              </ListGroup>
-              <span className="fw-light">Note: only empty categories can be deleted</span>
+                <ListGroup className='mt-4'>
+                  {categories.map((cat) => (
+                    <ListGroup.Item key={cat.id}>
+                      <div className='d-flex justify-content-between align-items-center'>
+                        <span>{cat.title}</span>
+                        <Button
+                          onClick={() => onDeleteCategory(cat)}
+                          disabled={cat.notes.length > 0}
+                          variant='danger'
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+                <span className='fw-light'>
+                  Note: only empty categories can be deleted
+                </span>
               </>
             )}
           </Form>

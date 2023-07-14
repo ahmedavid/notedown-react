@@ -86,6 +86,7 @@ function App() {
     setIsLoading(true)
     const id = await noteService.createCategory(title)
     categories.push({ id, title, notes: [] })
+    setCategories([...categories])
     setIsLoading(false)
   }
 
@@ -93,13 +94,12 @@ function App() {
     setIsLoading(true)
     try {
       await noteService.deleteCategory(category)
-      setCategories(categories.filter(c => c.id !== category.id))
+      setCategories(categories.filter((c) => c.id !== category.id))
     } catch (error) {
       console.log(error)
     }
     setIsLoading(false)
   }
-
 
   const handleDeleteNote = async (noteId: number, categoryId: number) => {
     await noteService.deleteNote(noteId)
