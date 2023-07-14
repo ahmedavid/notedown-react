@@ -17,13 +17,19 @@ spec:
           image: busybox:latest
           command:
             ["sh", "-c", "until nc -z postgres-svc 5432; do sleep 5; done;"]
-        - name: db-init
+        - name: db-push
           image: ahmedavid/notedown-react-server:latest
           command:
             - "sh"
             - "-c"
             - |
             - "npx prisma db push"
+        - name: db-seed
+          image: ahmedavid/notedown-react-server:latest
+          command:
+            - "sh"
+            - "-c"
+            - |
             - "npx prisma db seed"
       containers:
         - name: notedown-react-server
