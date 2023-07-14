@@ -5,10 +5,7 @@ COPY . .
 COPY .env.prod .env
 RUN apk update && \
     apk add --no-cache nodejs npm
-RUN npm install && \ 
-    npx prisma generate
-RUN npx prisma db push && \
-    npx prisma db seed 
-CMD npx ts-node src/index.ts
+RUN npm install && npx prisma generate
+CMD ["sh", "-c", "npx prisma db push && npx prisma db seed && npx ts-node src/index.ts"]
 EXPOSE 3000
 
