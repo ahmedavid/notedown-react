@@ -44,7 +44,7 @@ stages:
               script: "CI=true npm test"
               workingDirectory: "$(System.DefaultWorkingDirectory)/client"
 
-  - stage: Build For PR
+  - stage: BuildPR
     displayName: Build For Pull Request
     condition: ne(variables['Build.SourceBranch'], 'refs/heads/main')
     jobs:
