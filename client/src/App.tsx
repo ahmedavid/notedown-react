@@ -2,10 +2,20 @@ import "./App.css"
 import MyNavbar from "./components/MyNavbar"
 import { useEffect, useState } from "react"
 import BoardTest from "./components/test/BoardTest"
-import NoteService, { Category, Note } from "./services/note.service"
+import {
+  Category,
+  Note,
+  NoteService,
+  AuthService,
+  getLoggedInUser,
+  TokenData,
+} from "./services/note.service"
 import MyModal from "./components/MyModal"
+import AuthModal from "./components/AuthModal"
+import { Alert } from "react-bootstrap"
 
 export type ModalType = "note" | "category"
+type AuthType = "Login" | "Register" | null
 
 export interface ModalData {
   title: string
@@ -19,6 +29,7 @@ export interface MyAlert {
 }
 
 const noteService = new NoteService()
+const authService = new AuthService()
 
 function App() {
   const [categories, setCategories] = useState<Category[]>([])
@@ -26,7 +37,17 @@ function App() {
   const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [alert, setAlert] = useState<MyAlert | null>(null)
+  const [LoggedIn, setLoggedIn] = useState<{
+    isLogin: boolean
+    user: TokenData | null
+  }>({ isLogin: false, user: null })
 
+  const [showAuthModal, setShowAuthModal] = useState<{
+    show: boolean
+    type: AuthType
+    busy: boolean
+    error: string | null
+  }>({ show: false, type: null, busy: false, error: null })
   const [showModal, setShowModal] = useState(false)
   const [modaData, setModalData] = useState<ModalData>({
     label: "",
@@ -115,10 +136,15 @@ function App() {
   }
 
   const init = async () => {
-    setIsLoading(true)
-    const cats = await noteService.getCategories()
-    setCategories(cats)
-    setIsLoading(false)
+    const user = getLoggedInUser()
+    console.log("USER: ", user)
+    if (user) {
+      setLoggedIn({ isLogin: true, user })
+      setIsLoading(true)
+      const cats = await noteService.getCategories()
+      setCategories(cats)
+      setIsLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -140,8 +166,67 @@ function App() {
     setShowModal(true)
   }
 
+  const handleCloseAuth = () =>
+    setShowAuthModal({ show: false, type: null, busy: false, error: null })
+  const handleShowAuth = (type: AuthType) =>
+    setShowAuthModal({ show: true, type, busy: false, error: null })
+
   return (
     <>
+      {showAuthModal.type && (
+        <AuthModal
+          onClose={handleCloseAuth}
+          onLogin={({ email, password }) => {
+            // console.log("CREDS: ", credentials)
+            authService
+              .login(email, password)
+              .then(({ status, error, data }) => {
+                if (error) {
+                  setShowAuthModal({ ...showAuthModal, error: error })
+                  return
+                }
+
+                setShowAuthModal({
+                  show: false,
+                  type: null,
+                  busy: false,
+                  error: null,
+                })
+                init()
+              })
+          }}
+          onRegister={({ email, name, password, passwordConfirm }) => {
+            // console.log("CREDS: ", credentials)
+            setShowAuthModal({ ...showAuthModal, busy: true })
+            authService
+              .register(email, name, password, passwordConfirm)
+              .then(({ status, error, data }) => {
+                if (error) {
+                  setShowAuthModal({ ...showAuthModal, error: error })
+                  return
+                }
+                setShowAuthModal({
+                  show: false,
+                  type: null,
+                  busy: false,
+                  error: null,
+                })
+                init()
+              })
+              .catch((err) => {
+                setShowAuthModal({ ...showAuthModal, busy: false })
+                console.log(
+                  "REGISTER ERROR: ",
+                  err.json().then((error: any) => console.log(error))
+                )
+              })
+          }}
+          type={showAuthModal.type}
+          busy={showAuthModal.busy}
+          showModal={showAuthModal.show}
+          error={showAuthModal.error}
+        />
+      )}
       <MyModal
         categories={categories}
         showModal={showModal}
@@ -163,19 +248,40 @@ function App() {
         onNewCategory={() =>
           handleShow("Manage Category", "New Category Label", "category")
         }
+        LoggedIn={LoggedIn}
+        onLogin={() => {
+          // authService.login(email, password)
+          // noteService.getCategories()
+          handleShowAuth("Login")
+        }}
+        onRegister={() => {
+          handleShowAuth("Register")
+        }}
+        onLogout={() => {
+          document.cookie = "jwt=; max-age=0"
+          setCategories([])
+          setLoggedIn({ isLogin: false, user: null })
+        }}
       />
-      <div className='container'>
-        <BoardTest
-          alert={alert}
-          isLoading={isLoading}
-          selectedNote={selectedNote}
-          selectedNoteId={selectedNoteId}
-          categories={categories}
-          onNoteSelected={handleNoteSelected}
-          onUpdateNote={handleUpdateNote}
-          onDeleteNote={handleDeleteNote}
-        />
-      </div>
+      {!LoggedIn.isLogin && (
+        <div className='container'>
+          <Alert variant='warning'>You are not logged in!</Alert>
+        </div>
+      )}
+      {LoggedIn.isLogin && (
+        <div className='container'>
+          <BoardTest
+            alert={alert}
+            isLoading={isLoading}
+            selectedNote={selectedNote}
+            selectedNoteId={selectedNoteId}
+            categories={categories}
+            onNoteSelected={handleNoteSelected}
+            onUpdateNote={handleUpdateNote}
+            onDeleteNote={handleDeleteNote}
+          />
+        </div>
+      )}
     </>
   )
 }
