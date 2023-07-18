@@ -1,8 +1,9 @@
 import express from "express"
 import cors from "cors"
-import userRouter from "./routes/user"
+import authRouter from "./routes/auth"
 import categoryRouter from "./routes/category"
 import noteRouter from "./routes/note"
+import { authMiddleware } from "./middleware/auth"
 
 const app = express()
 
@@ -13,9 +14,9 @@ app.use(cors())
 
 app.use(express.json())
 
-app.use("/api/category", categoryRouter)
-app.use("/api/user", userRouter)
+app.use("/api/category", authMiddleware, categoryRouter)
 app.use("/api/note", noteRouter)
+app.use("/api/auth", authRouter)
 app.get("/ready", (req, res) => {
   res.send("Ready")
 })
