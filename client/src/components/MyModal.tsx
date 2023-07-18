@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Button, Form, ListGroup, Modal } from "react-bootstrap"
 import { Category } from "../services/note.service"
 import { ModalData, ModalType } from "../App"
@@ -24,6 +24,7 @@ const MyModal = ({
   categories,
   onDeleteCategory,
 }: Props) => {
+  const valueInput = useRef<HTMLInputElement | null>(null)
   const [value, setValue] = useState("")
   const [categoryId, setCategoryId] = useState<number | undefined>(undefined)
   const onClose = () => {
@@ -37,9 +38,9 @@ const MyModal = ({
     } else {
       setCategoryId(undefined)
     }
-  }, [categories])
-
-  console.log("CATID: ", categoryId)
+    console.log(valueInput)
+    valueInput.current?.focus()
+  }, [categories, showModal])
 
   return (
     <>
@@ -49,7 +50,21 @@ const MyModal = ({
         </Modal.Header>
 
         <Modal.Body>
-          <Form>
+          <Form
+            onSubmit={(e) => {
+              e.preventDefault()
+              if (value.length > 0) {
+                if (type === "category") {
+                  handleSubmit({ type: type, value })
+                }
+                if (type === "note") {
+                  handleSubmit({ type: type, categoryId, value })
+                }
+                onClose()
+              }
+            }}
+            id='category-form'
+          >
             <Form.Group>
               <Form.Label htmlFor='value'>{label}</Form.Label>
               <Form.Control
@@ -58,11 +73,12 @@ const MyModal = ({
                 name='value'
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
+                ref={valueInput}
               ></Form.Control>
             </Form.Group>
             {type === "note" && (
               <Form.Group>
-                <Form.Label>{label}</Form.Label>
+                <Form.Label>Category</Form.Label>
                 <Form.Select
                   aria-label='Default select example'
                   onChange={(e) => setCategoryId(parseInt(e.target.value))}
@@ -106,20 +122,7 @@ const MyModal = ({
           <Button variant='secondary' onClick={onClose}>
             Close
           </Button>
-          <Button
-            variant='primary'
-            onClick={() => {
-              if (value.length > 0) {
-                if (type === "category") {
-                  handleSubmit({ type: type, value })
-                }
-                if (type === "note") {
-                  handleSubmit({ type: type, categoryId, value })
-                }
-                onClose()
-              }
-            }}
-          >
+          <Button variant='primary' form='category-form'>
             Save
           </Button>
         </Modal.Footer>
