@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react"
-import { Alert, Button, Form, ListGroup, Modal, Spinner } from "react-bootstrap"
+import { useState } from "react"
+import { Alert, Button, Form, Modal, Spinner } from "react-bootstrap"
 
 interface Credentials {
   email: string
@@ -27,10 +27,10 @@ const AuthModal = ({
   onLogin,
   onRegister,
 }: Props) => {
-  const [email, setEmail] = useState("ahmedavid@gmail.com")
-  const [name, setName] = useState("David Ahmadov")
-  const [password, setPassword] = useState("1234")
-  const [passwordConfirm, setPasswordConfirm] = useState("12345")
+  const [email, setEmail] = useState("")
+  const [name, setName] = useState("")
+  const [password, setPassword] = useState("")
+  const [passwordConfirm, setPasswordConfirm] = useState("")
 
   // useEffect(() => {}, [type])
 
