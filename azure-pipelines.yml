@@ -44,8 +44,9 @@ stages:
               script: "CI=true npm test"
               workingDirectory: "$(System.DefaultWorkingDirectory)/client"
 
-  - stage: BuildAndPush
-    displayName: Build and Push Docker image
+  - stage: BuildPR
+    displayName: Build For Pull Request
+    condition: ne(variables['Build.SourceBranch'], 'refs/heads/main')
     jobs:
       - job: BuildJob
         steps:
@@ -59,8 +60,15 @@ stages:
             tags: |
               $(Build.BuildId)
               latest
+
+  - stage: BuildAndPush
+    displayName: Build and Push Docker image
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+    jobs:
+      - job: BuildJob
+        steps:
         - task: Docker@2
-          condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+
           inputs:
             containerRegistry: 'dockerhub-ahmedavid'
             repository: 'ahmedavid/notedown-react'
