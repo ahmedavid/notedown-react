@@ -38,7 +38,6 @@ const MyModal = ({
     } else {
       setCategoryId(undefined)
     }
-    console.log(valueInput)
     valueInput.current?.focus()
   }, [categories, showModal])
 
@@ -122,7 +121,7 @@ const MyModal = ({
           <Button variant='secondary' onClick={onClose}>
             Close
           </Button>
-          <Button variant='primary' form='category-form'>
+          <Button variant='primary' form='category-form' type='submit'>
             Save
           </Button>
         </Modal.Footer>

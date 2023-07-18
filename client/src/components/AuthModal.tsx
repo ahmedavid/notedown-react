@@ -32,8 +32,6 @@ const AuthModal = ({
   const [password, setPassword] = useState("")
   const [passwordConfirm, setPasswordConfirm] = useState("")
 
-  // useEffect(() => {}, [type])
-
   return (
     <>
       <Modal show={showModal} onHide={onClose}>
@@ -55,17 +53,18 @@ const AuthModal = ({
               ></Form.Control>
             </Form.Group>
 
-            <Form.Group>
-              <Form.Label htmlFor='name'>Name</Form.Label>
-              <Form.Control
-                type='name'
-                id='name'
-                name='name'
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
-
+            {type === "Register" && (
+              <Form.Group>
+                <Form.Label htmlFor='name'>Name</Form.Label>
+                <Form.Control
+                  type='name'
+                  id='name'
+                  name='name'
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
+            )}
             <Form.Group>
               <Form.Label htmlFor='password'>Password</Form.Label>
               <Form.Control
