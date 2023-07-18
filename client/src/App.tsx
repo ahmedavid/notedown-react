@@ -260,6 +260,8 @@ function App() {
         onLogout={() => {
           document.cookie = "jwt=; max-age=0"
           setCategories([])
+          setSelectedNote(null)
+          setSelectedNoteId(null)
           setLoggedIn({ isLogin: false, user: null })
         }}
       />
