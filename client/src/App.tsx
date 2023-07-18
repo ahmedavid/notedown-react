@@ -244,7 +244,7 @@ function App() {
         onDeleteCategory={(category) => handleDeleteCategory(category)}
       />
       <MyNavbar
-        onNewDoc={() => handleShow("Note Title", "Note Label", "note")}
+        onNewDoc={() => handleShow("New Note", "Label", "note")}
         onNewCategory={() =>
           handleShow("Manage Category", "New Category Label", "category")
         }

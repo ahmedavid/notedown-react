@@ -21,7 +21,7 @@ router.post("/register", async (req, res) => {
         errorMessage: "Email is invalid",
       },
       {
-        valid: validator.isLength(password, { min: 3, max: 12 }),
+        valid: validator.isLength(password, { min: 5, max: 100 }),
         errorMessage: "Password is invalid",
       },
       {

@@ -1,6 +1,6 @@
 import { Button, Spinner } from "react-bootstrap"
 import MarkdownEditor from "rich-markdown-editor"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Note } from "../../services/note.service"
 
 interface Props {
@@ -18,6 +18,10 @@ const BoardContent = ({
 }: Props) => {
   const [content, setContent] = useState("")
   const [editing, setEditing] = useState(false)
+
+  useEffect(() => {
+    setEditing(false)
+  }, [selectedNote])
 
   const handleEditDoc = () => {
     setEditing(true)
