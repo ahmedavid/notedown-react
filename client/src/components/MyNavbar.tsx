@@ -1,4 +1,12 @@
-import { Container, Nav, Navbar, Button, ButtonGroup } from "react-bootstrap"
+import {
+  Container,
+  Nav,
+  Navbar,
+  Button,
+  ButtonGroup,
+  DropdownButton,
+  Dropdown,
+} from "react-bootstrap"
 import { TokenData } from "../services/note.service"
 
 interface Props {
@@ -8,6 +16,7 @@ interface Props {
   onLogin: () => void
   onRegister: () => void
   onLogout: () => void
+  onExport: (email: string) => void
 }
 
 const MyNavbar = ({
@@ -17,6 +26,7 @@ const MyNavbar = ({
   onLogin,
   onRegister,
   onLogout,
+  onExport,
 }: Props) => {
   return (
     <Navbar bg='light' expand='lg' className='my-2'>
@@ -31,7 +41,6 @@ const MyNavbar = ({
                 <Button onClick={onNewCategory} className='mx-2'>
                   Manage Category
                 </Button>
-                <span>{LoggedIn.user?.email}</span>
               </>
             )}
 
@@ -51,9 +60,29 @@ const MyNavbar = ({
           )}
 
           {LoggedIn.isLogin && (
-            <Button variant='warning' onClick={onLogout} className='mx-2'>
-              Logout
-            </Button>
+            // <Button variant='warning' onClick={onLogout} className='mx-2'>
+            //   Logout
+            // </Button>
+
+            <DropdownButton
+              as={ButtonGroup}
+              id={`dropdown-variants-secondary`}
+              variant='secondary'
+              title={LoggedIn.user?.name}
+            >
+              <Dropdown.Item as={Button}>Profile</Dropdown.Item>
+              <Dropdown.Item as={Button}>Import</Dropdown.Item>
+              <Dropdown.Item
+                as={Button}
+                onClick={() => onExport(LoggedIn.user!.email)}
+              >
+                Export
+              </Dropdown.Item>
+              <Dropdown.Divider />
+              <Dropdown.Item as={Button} onClick={onLogout}>
+                Logout
+              </Dropdown.Item>
+            </DropdownButton>
           )}
         </Navbar.Collapse>
       </Container>

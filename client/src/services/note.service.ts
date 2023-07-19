@@ -165,6 +165,19 @@ class NoteService {
     }>)
     return data.noteId
   }
+
+  async exportData(email: string) {
+    const response = await fetch(`${baseUrl}/user/export`)
+    const blob = await response.blob()
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement("a")
+    link.href = url
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-")
+    const filename = `${email}-${timestamp}.zip`
+    link.download = filename
+    link.click()
+    console.log("EXPORT: ", url)
+  }
 }
 
 class AuthService {
