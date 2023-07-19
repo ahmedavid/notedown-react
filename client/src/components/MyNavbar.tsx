@@ -17,6 +17,7 @@ interface Props {
   onRegister: () => void
   onLogout: () => void
   onExport: (email: string) => void
+  onImport: () => void
 }
 
 const MyNavbar = ({
@@ -27,6 +28,7 @@ const MyNavbar = ({
   onRegister,
   onLogout,
   onExport,
+  onImport,
 }: Props) => {
   return (
     <Navbar bg='light' expand='lg' className='my-2'>
@@ -71,7 +73,9 @@ const MyNavbar = ({
               title={LoggedIn.user?.name}
             >
               <Dropdown.Item as={Button}>Profile</Dropdown.Item>
-              <Dropdown.Item as={Button}>Import</Dropdown.Item>
+              <Dropdown.Item as={Button} onClick={() => onImport()}>
+                Import
+              </Dropdown.Item>
               <Dropdown.Item
                 as={Button}
                 onClick={() => onExport(LoggedIn.user!.email)}

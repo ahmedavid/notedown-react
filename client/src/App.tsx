@@ -7,12 +7,14 @@ import {
   Note,
   NoteService,
   AuthService,
+  UserService,
   getLoggedInUser,
   TokenData,
 } from "./services/note.service"
 import MyModal from "./components/MyModal"
 import AuthModal from "./components/AuthModal"
 import { Alert } from "react-bootstrap"
+import ImportModal from "./components/ImportModal"
 
 export type ModalType = "note" | "category"
 type AuthType = "Login" | "Register" | null
@@ -30,6 +32,7 @@ export interface MyAlert {
 
 const noteService = new NoteService()
 const authService = new AuthService()
+const userService = new UserService()
 
 function App() {
   const [categories, setCategories] = useState<Category[]>([])
@@ -41,6 +44,12 @@ function App() {
     isLogin: boolean
     user: TokenData | null
   }>({ isLogin: false, user: null })
+
+  const [showImportModal, setShowImportModal] = useState<{
+    show: boolean
+    busy: boolean
+    error: string | null
+  }>({ show: false, busy: false, error: null })
 
   const [showAuthModal, setShowAuthModal] = useState<{
     show: boolean
@@ -173,6 +182,33 @@ function App() {
 
   return (
     <>
+      {true && (
+        <ImportModal
+          busy={showImportModal.busy}
+          error={null}
+          showModal={showImportModal.show}
+          onClose={() => {
+            if (showImportModal.busy) return
+            setShowImportModal({ ...showImportModal, show: false })
+          }}
+          onImport={(file) => {
+            setShowImportModal({ ...showImportModal, busy: true })
+            userService
+              .importArchive(file)
+              .then(() => {
+                setShowImportModal({ ...showImportModal, busy: false })
+                init()
+              })
+              .catch((err) => {
+                setShowImportModal({
+                  ...showImportModal,
+                  error: "Import Failed",
+                  busy: false,
+                })
+              })
+          }}
+        />
+      )}
       {showAuthModal.type && (
         <AuthModal
           onClose={handleCloseAuth}
@@ -266,6 +302,10 @@ function App() {
         }}
         onExport={(email) => {
           noteService.exportData(email)
+        }}
+        onImport={() => {
+          // noteService.exportData(email)
+          setShowImportModal({ ...showImportModal, show: true })
         }}
       />
       {!LoggedIn.isLogin && (
