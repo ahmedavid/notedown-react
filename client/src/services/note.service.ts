@@ -231,4 +231,18 @@ class AuthService {
   }
 }
 
-export { NoteService, AuthService, getLoggedInUser }
+class UserService {
+  async importArchive(file: File) {
+    const formData = new FormData()
+    formData.append("file", file)
+    const response = await fetch(`${baseUrl}/user/import`, {
+      method: "POST",
+      body: formData,
+    })
+
+    const data = await response.json()
+    console.log("IMPORT: ", data)
+  }
+}
+
+export { NoteService, AuthService, UserService, getLoggedInUser }
