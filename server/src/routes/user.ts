@@ -1,10 +1,27 @@
 import express from "express"
 const router = express.Router()
+import AdmZip from "adm-zip"
 import { prisma } from "../db"
+import { UserRequest } from "../middleware/auth"
 
-router.get("/", async (req, res) => {
-  const users = await prisma.user.findMany()
-  res.json(users)
+router.get("/export", async (req, res) => {
+  const userId = (req as UserRequest).user.id
+  const items = await prisma.user.findMany({
+    where: { id: userId },
+    select: {
+      categories: {
+        select: {
+          title: true,
+          notes: { select: { title: true, content: true } },
+        },
+      },
+    },
+  })
+
+  const zip = new AdmZip()
+  const content = JSON.stringify(items)
+  zip.addFile("archive.json", Buffer.from(content, "utf8"))
+  res.send(zip.toBuffer())
 })
 
 router.post(`/`, async (req, res) => {

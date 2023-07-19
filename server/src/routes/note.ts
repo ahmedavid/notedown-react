@@ -68,11 +68,4 @@ router.post(`/`, async (req, res) => {
   }
 })
 
-// Define routes for the User entity
-// router.get('/', () => {});
-// router.get('/:id', userController.getUserById);
-// router.post('/', () => {});
-// router.put('/:id', userController.updateUser);
-// router.delete('/:id', userController.deleteUser);
-
 export default router

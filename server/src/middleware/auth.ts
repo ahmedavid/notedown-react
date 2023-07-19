@@ -30,15 +30,9 @@ export async function authMiddleware(
   try {
     const secret = new TextEncoder().encode("secret")
     await jose.jwtVerify(token, secret)
-    const decoded: TokenData = jwt.decode(token) as TokenData
-    console.log("DECODED: ", decoded.name)
-    ;(req as UserRequest).user = {
-      email: decoded.email,
-      id: decoded.id,
-      name: decoded.name,
-    }
+    const { email, name, id }: TokenData = jwt.decode(token) as TokenData
+    ;(req as UserRequest).user = { email, id, name }
   } catch (error) {
-    console.log("JOSE ERROR: ", error)
     return res.status(401).json({ error: "Unauthorized" })
   }
 

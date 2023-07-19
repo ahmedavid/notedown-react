@@ -264,6 +264,9 @@ function App() {
           setSelectedNoteId(null)
           setLoggedIn({ isLogin: false, user: null })
         }}
+        onExport={(email) => {
+          noteService.exportData(email)
+        }}
       />
       {!LoggedIn.isLogin && (
         <div className='container'>
