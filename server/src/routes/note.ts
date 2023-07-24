@@ -1,13 +1,22 @@
 import express from "express"
-const router = express.Router()
-
 import { prisma } from "../db"
+import { redis } from "../redis"
+
+const router = express.Router()
 
 router.get("/:noteId", async (req, res) => {
   const noteId = parseInt(req.params.noteId)
   console.log("Note Id:", noteId)
   if (!noteId) return res.json({ error: "Invalid note id", data: null })
+
+  const cachedNote = await redis.get(`note-${noteId}`)
+  if (cachedNote) return res.json(JSON.parse(cachedNote))
+
+  console.log(`Cache missed note-${noteId}`)
+
   const note = await prisma.note.findUnique({ where: { id: noteId } })
+  if (!note) return res.status(404).json({ error: "Note not found" })
+  await redis.set(`note-${noteId}`, JSON.stringify(note), { EX: 60 })
   res.json(note)
 })
 

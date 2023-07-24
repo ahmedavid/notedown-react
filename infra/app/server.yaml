@@ -17,6 +17,9 @@ spec:
           image: busybox:latest
           command:
             ["sh", "-c", "until nc -z postgres-svc 5432; do sleep 5; done;"]
+        - name: wait-for-redis
+          image: busybox:latest
+          command: ["sh", "-c", "until nc -z redis-svc 6379; do sleep 5; done;"]
       containers:
         - name: notedown-react-server
           image: ahmedavid/notedown-react-server:latest
