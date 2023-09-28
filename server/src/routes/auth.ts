@@ -121,7 +121,7 @@ router.post("/login", async (req, res) => {
     .sign(new TextEncoder().encode("secret"))
 
   res.cookie("jwt", token, {
-    maxAge: 60 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: false,
     sameSite: "none",
     secure: true,
